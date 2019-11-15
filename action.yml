@@ -1,0 +1,12 @@
+name: 'Publish reddit stylesheet'
+description: 'Publish a reddit stylesheet to a subreddit'
+inputs:
+  subreddit:
+    description: 'Subreddit to publish to'
+    required: true
+outputs:
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.subreddit }}
