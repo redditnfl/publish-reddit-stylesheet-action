@@ -78,7 +78,7 @@ class StyleSheetUpdater:
 if __name__ == "__main__":
     pprint(sys.argv)
     pprint(os.environ)
-    pprint(glob(os.environ['GITHUB_WORKSPACE'] + '/**', recursive=True)
+    pprint(glob(os.environ['GITHUB_WORKSPACE'] + '/**', recursive=True))
 
     #uploader = StyleSheetUpdater("%s/%s" % (PROGRAM, VERSION))
     #uploader.main()
