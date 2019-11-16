@@ -18,19 +18,19 @@ steps:
 - name: Download theme data
   uses: actions/download-artifact@v1.0.0
   with:
-	name: themeartifact
-	path: theme
+    name: themeartifact
+    path: theme
 
 # Deploy
 - name: Deploy to my subreddit
   uses: redditnfl/publish-reddit-stylesheet-action@v1.0.0
   with:
-	subreddit: mysubreddit
-	path: theme
+    subreddit: mysubreddit
+    path: theme
   env:
-	praw_client_id: ${{ secrets.style_publisher_praw_client_id }}
-	praw_client_secret: ${{ secrets.style_publisher_praw_client_secret }}
-	praw_refresh_token: ${{ secrets.style_publisher_praw_refresh_token }}
+    praw_client_id: ${{ secrets.style_publisher_praw_client_id }}
+    praw_client_secret: ${{ secrets.style_publisher_praw_client_secret }}
+    praw_refresh_token: ${{ secrets.style_publisher_praw_refresh_token }}
 ```
 
 # License
