@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from glob import glob
 from pprint import pprint
 import traceback
 from praw import Reddit
@@ -77,6 +78,7 @@ class StyleSheetUpdater:
 if __name__ == "__main__":
     pprint(sys.argv)
     pprint(os.environ)
+    pprint(glob(os.environ['GITHUB_WORKSPACE'] + '/**', recursive=True)
 
     #uploader = StyleSheetUpdater("%s/%s" % (PROGRAM, VERSION))
     #uploader.main()
