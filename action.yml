@@ -1,5 +1,8 @@
 name: 'Publish reddit stylesheet'
 description: 'Publish a reddit stylesheet to a subreddit'
+branding:
+  icon: 'image'
+  color: 'blue'
 inputs:
   subreddit:
     description: 'Subreddit to publish to'

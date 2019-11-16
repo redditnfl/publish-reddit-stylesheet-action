@@ -12,7 +12,7 @@ from pathlib import Path
 PROGRAM = "Reddit Stylesheet Updater"
 VERSION = "0.5"
 MAX_EDIT_REASON_LENGTH = 256
-IMAGE_SUFFIXES = ['jpg', 'jpeg', 'png']
+IMAGE_SUFFIXES = ['.jpg', '.jpeg', '.png']
 
 class StyleSheetUpdater:
 
@@ -22,6 +22,7 @@ class StyleSheetUpdater:
     def main(self):
         argparser = argparse.ArgumentParser('Publish reddit stylesheet')
         argparser.add_argument("-c", "--clear", action='store_true', help="Clear subreddit styles and images before uploading (rarely    necessary)")
+        argparser.add_argument("-n", "--no-images", action='store_true', help="Skip uploading images")
         argparser.add_argument("subreddit", help="Subreddit to upload to")
         argparser.add_argument("dir", help="Dir to push files from")
         self.args = argparser.parse_args()
@@ -41,6 +42,7 @@ class StyleSheetUpdater:
                 continue
             print("File: %s" % fn)
             suf = fn.suffix.lower()
+            print(suf)
             if suf == '.css':
                 print("Stylesheet: %s" % fn)
                 #stylesheet = codecs.getreader("UTF-8")(fn)
