@@ -4,9 +4,13 @@ inputs:
   subreddit:
     description: 'Subreddit to publish to'
     required: true
+  path:
+    description: 'Path to theme files'
+    required: true
 outputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.subreddit }}
+    - ${{ inputs.path }}

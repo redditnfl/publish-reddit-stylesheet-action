@@ -79,6 +79,8 @@ if __name__ == "__main__":
     pprint(sys.argv)
     pprint(os.environ)
     pprint(glob(os.environ['GITHUB_WORKSPACE'] + '/**', recursive=True))
+    pprint(glob('%s/%s/**' % (os.enfiron['GITHUB_WORKSPACE'], sys.argv[2])))
+    pprint(glob('%s/**' % (sys.argv[2])))
 
     #uploader = StyleSheetUpdater("%s/%s" % (PROGRAM, VERSION))
     #uploader.main()
