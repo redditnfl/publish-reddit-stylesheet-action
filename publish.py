@@ -62,6 +62,7 @@ class StyleSheetUpdater:
         # Need to do this last, or the images wouldn't be there
         if stylesheet:
             self.put_stylesheet(stylesheet.read(), reason=self.args.reason)
+        self.r = Reddit(ua=self.ua)
 
     def put_stylesheet(self, styles, reason = u''):
         print("Put stylesheet to %s:\n-------------------------------------------------\n%s\n-------------------------------------------------" % (self.subreddit.display_name, styles))
