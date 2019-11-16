@@ -20,7 +20,7 @@ class StyleSheetUpdater:
 
     def main(self):
         argparser = argparse.ArgumentParser('Publish reddit stylesheet')
-        argparser.add_argument("-c", "--clear", action='store_true', help="Clear subreddit styles and images before uploading (rarely    necessary)")
+        argparser.add_argument("-c", "--clear", action='store_true', help="Clear subreddit styles and images before uploading (rarely necessary)")
         argparser.add_argument("-n", "--no-images", action='store_true', help="Skip uploading images")
         argparser.add_argument("subreddit", help="Subreddit to upload to")
         argparser.add_argument("dir", help="Dir to push files from")
