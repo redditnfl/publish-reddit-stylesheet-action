@@ -39,9 +39,7 @@ class StyleSheetUpdater:
         for fn in input_dir.glob('**/*'):
             if not fn.is_file():
                 continue
-            print("File: %s" % fn)
             suf = fn.suffix.lower()
-            print(suf)
             if suf == '.css':
                 print("Stylesheet: %s" % fn)
                 stylesheet = open(fn, 'r', encoding='UTF-8')
@@ -61,17 +59,15 @@ class StyleSheetUpdater:
             self.put_stylesheet(stylesheet.read())
 
     def put_stylesheet(self, styles):
-        reason = 'Automatic update'
+        reason = 'Automatic update to {shorthash} by {author}'.format(
+                shorthash=os.environ['GITHUB_SHA'][0:8],
+                author=os.environ['GITHUB_ACTOR'],
+                ref=os.environ['GITHUB_REF'])
         print("Put stylesheet to %s:\n-------------------------------------------------\n%s\n-------------------------------------------------" % (self.subreddit.display_name, styles))
-        try:
-            reason = reason[:MAX_EDIT_REASON_LENGTH]
-            r = self.subreddit.stylesheet.update(styles, reason=reason)
-            if r is not None:
-                print(repr(r))
-        except PRAWException as e:
-            print(e._raw.status_code)
-            print(e._raw.text)
-            raise e
+        reason = reason[:MAX_EDIT_REASON_LENGTH]
+        r = self.subreddit.stylesheet.update(styles, reason=reason)
+        if r is not None:
+            print(repr(r))
 
     def upload_file(self, fn):
         print("Upload file %s" % fn)
@@ -90,7 +86,7 @@ if __name__ == "__main__":
     DUMMY_VALUE = 'dc38489e-3cc0-4167-83c6-f992d50fb04e'
     print("::add-mask::%s" % os.environ.get('praw_client_id', DUMMY_VALUE))
     print("::add-mask::%s" % os.environ.get('praw_client_secret', DUMMY_VALUE))
-    print("::add-mask::%s" % os.environ.get('praw_client_refresh_token', DUMMY_VALUE))
+    print("::add-mask::%s" % os.environ.get('praw_refresh_token', DUMMY_VALUE))
     print("::add-mask::%s" % os.environ.get('praw_password', DUMMY_VALUE))
     print("::add-mask::%s" % os.environ.get('praw_username', DUMMY_VALUE))
 
