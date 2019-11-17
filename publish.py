@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import re
 from glob import glob
 import traceback
 from praw import Reddit
@@ -65,9 +66,21 @@ class StyleSheetUpdater:
                 ref=os.environ['GITHUB_REF'])
         print("Put stylesheet to %s:\n-------------------------------------------------\n%s\n-------------------------------------------------" % (self.subreddit.display_name, styles))
         reason = reason[:MAX_EDIT_REASON_LENGTH]
-        r = self.subreddit.stylesheet.update(styles, reason=reason)
-        if r is not None:
-            print(repr(r))
+        try:
+            r = self.subreddit.stylesheet.update(styles, reason=reason)
+            if r is not None:
+                print(repr(r))
+        except PRAWException as e:
+            self.check_images(styles)
+            raise e
+
+    def check_images(self, styles):
+        from pprint import pprint
+        available = set([i['name'] for i in self.subreddit.stylesheet().images])
+        used = set(re.findall(r'%%([^%]*)%%', styles))
+        missing = used - available
+        if missing:
+            print("::error::Missing images: %s" % ", ".join(missing))
 
     def upload_file(self, fn):
         print("Upload file %s" % fn)
