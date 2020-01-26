@@ -10,6 +10,18 @@ inputs:
   path:
     description: 'Path to theme files'
     required: true
+  clear:
+    description: 'Clear style and images before uploading'
+    required: false
+    default: false
+  cleanup:
+    description: 'Remove unused images'
+    required: false
+    default: false
+  skip images:
+    description: 'Skip uploading of images'
+    required: false
+    default: false
 outputs:
 runs:
   using: 'docker'

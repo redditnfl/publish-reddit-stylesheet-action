@@ -4,15 +4,18 @@ from glob import glob
 import traceback
 from praw import Reddit
 from praw.exceptions import PRAWException
+from prawcore.exceptions import PrawcoreException, TooLarge
 import argparse
 import sys
 import os
 from pathlib import Path
 
 PROGRAM = "Reddit Stylesheet Updater"
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 MAX_EDIT_REASON_LENGTH = 256
 IMAGE_SUFFIXES = ['.jpg', '.jpeg', '.png']
+
+TRUE_VALUE = ["true", "yes", "1", "y", "t"]
 
 class Actions:
     @staticmethod
@@ -36,11 +39,13 @@ class StyleSheetUpdater:
     def main(self):
         argparser = argparse.ArgumentParser('Publish reddit stylesheet')
         argparser.add_argument("-c", "--clear", action='store_true', help="Clear subreddit styles and images before uploading (rarely necessary)")
-        argparser.add_argument("-n", "--no-images", action='store_true', help="Skip uploading images")
+        argparser.add_argument("-n", "--skip-images", action='store_true', help="Skip uploading images")
         argparser.add_argument("-s", "--cleanup", action='store_true', help="Remove unused images before and after publishing")
         argparser.add_argument("subreddit", help="Subreddit to upload to")
         argparser.add_argument("dir", help="Dir to push files from")
         self.args = argparser.parse_args()
+
+        self._read_env_options()
 
         sr_name = self.args.subreddit
         input_dir = Path(self.args.dir)
@@ -69,14 +74,21 @@ class StyleSheetUpdater:
                 print("Stylesheet: %s" % fn)
                 stylesheet = open(fn, 'r', encoding='UTF-8')
             elif suf in IMAGE_SUFFIXES:
-                if self.args.no_images:
+                if self.args.skip_images:
                     print("Not uploading image %s" % fn)
                     continue
                 try:
                     self.upload_file(fn)
+                except TooLarge as e:
+                    Actions.error("Image %s too large (%d bytes)" % (fn, fn.stat().st_size))
+                    raise e
                 except PRAWException as e:
+                    # Treating this as a warning since it might already be there
                     Actions.warning("Failed uploading %s (%s)" % (fn, e))
                     traceback.print_exc()
+                except PRAWCoreException as e:
+                    Actions.error("Could not upload %s - %s" % (fn, e))
+                    raise e
             else:
                 print("Skipping file %s" % fn)
         # Need to do this last, or the images wouldn't be there
@@ -126,6 +138,11 @@ class StyleSheetUpdater:
     def upload_file(self, fn):
         print("Upload file %s" % fn)
         self.subreddit.stylesheet.upload(fn.stem, fn)
+
+    def _read_env_options(self):
+        for var, target in (("INPUT_CLEAR", "clear"), ("INPUT_CLEANUP", "cleanup"), ("INPUT_SKIP_IMAGES", "skip_images")):
+            if var in os.environ:
+                setattr(self.args, target, os.environ[var] in TRUE_VALUE)
 
     def clear(self):
         print("Clear all styles and files")

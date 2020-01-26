@@ -8,6 +8,20 @@ You need to setup an authenticated OAuth reddit client with modconfig scope
 
 See [action.yml](action.yml)
 
+## Inputs
+
+| Input       | Required | Default | Description                             |
+|:------------|:---------|:--------|:----------------------------------------|
+| subreddit   | true     |         | Subreddit to publish to                 |
+| path        | true     |         | Path to theme files                     |
+| clear       | false    | false   | Clear style and images before uploading |
+| cleanup     | false    | false   | Remove unused images                    |
+| skip images | false    | false   | Skip uploading of images                |
+
+**Note**: Setting `clear` will leave your subreddit without style for a while.
+
+## Example config
+
 ```yaml
 steps:
 - uses: actions/checkout@master
@@ -27,6 +41,9 @@ steps:
   with:
     subreddit: mysubreddit
     path: theme
+    clear: false
+    cleanup: false
+    skip images: false
   env:
     praw_client_id: ${{ secrets.style_publisher_praw_client_id }}
     praw_client_secret: ${{ secrets.style_publisher_praw_client_secret }}
