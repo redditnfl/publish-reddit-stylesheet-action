@@ -22,7 +22,6 @@ inputs:
     description: 'Skip uploading of images'
     required: false
     default: false
-outputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
